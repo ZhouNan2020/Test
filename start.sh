@@ -1,32 +1,39 @@
 #!/bin/bash
-# start.sh – Start the EDC system (backend + frontend dev server)
+# start.sh – One-click setup and launch for the EDC system
 # Usage: bash start.sh
+#
+# Requires: Node.js >= 22.5
 
 set -e
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 
 echo "=== Installing backend dependencies ==="
-cd "$ROOT/backend" && npm install
+cd "$ROOT/backend" && npm install --silent
 
 echo "=== Installing frontend dependencies ==="
-cd "$ROOT/frontend" && npm install
+cd "$ROOT/frontend" && npm install --silent
 
 echo "=== Building frontend ==="
 cd "$ROOT/frontend" && npm run build
 
-echo "=== Starting backend server ==="
+echo ""
+echo "=== Starting EDC system ==="
 cd "$ROOT/backend"
-node --experimental-sqlite src/server.js &
-BACKEND_PID=$!
-echo "Backend PID: $BACKEND_PID"
+node src/server.js &
+SERVER_PID=$!
+
+# Wait briefly to confirm the server started
+sleep 1
+if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+  echo "ERROR: Server failed to start."
+  exit 1
+fi
 
 echo ""
-echo "✅  Backend API:    http://localhost:3001/api"
-echo "✅  Frontend build: $ROOT/frontend/dist"
+echo "✅  系统已就绪，请在浏览器中打开："
 echo ""
-echo "To serve frontend + backend together, point a web server (nginx/caddy)"
-echo "at frontend/dist with /api proxy to localhost:3001"
+echo "    http://localhost:3001"
 echo ""
-echo "Press Ctrl+C to stop."
-wait $BACKEND_PID
+echo "按 Ctrl+C 可停止系统。"
+wait $SERVER_PID
