@@ -4,6 +4,33 @@
 
 ---
 
+## 🚀 快速上手：如何打开用户界面
+
+**方式一：Docker（推荐，无需安装 Node.js）**
+
+```bash
+# 安装 Docker Desktop 后，在项目根目录运行：
+docker-compose up --build
+
+# 浏览器访问：http://localhost:3001
+```
+
+**方式二：一键启动脚本（需要 Node.js ≥ 22.5）**
+
+```bash
+bash start.sh
+
+# 浏览器访问：http://localhost:3001
+```
+
+启动成功后，在浏览器中打开 **http://localhost:3001** 即可看到用户界面。
+
+> 💡 默认以管理员身份登录（admin）。右上角下拉菜单可切换用户（researcher1 / crc1）。
+>
+> ⚠️ **注意**：本系统使用基于 `x-user-id` 请求头的演示身份认证，仅适用于受信任的内网环境。**请勿在公共网络或生产环境中直接部署，否则任何人都可以切换身份访问所有数据。**
+
+---
+
 ## 一、项目目录结构
 
 ```
@@ -43,7 +70,9 @@
 ├── data/                      # SQLite 数据文件（运行时自动创建）
 │   └── edc.db
 │
-├── start.sh                   # 一键启动脚本
+├── Dockerfile                 # Docker 镜像构建文件
+├── docker-compose.yml         # Docker Compose 一键启动
+├── start.sh                   # 一键启动脚本（Node.js 本地运行）
 └── README.md
 ```
 
@@ -197,26 +226,46 @@
 
 ## 五、快速启动
 
-### 环境要求
-- Node.js >= 22.5（内置 `node:sqlite`）
-- npm >= 9
-
-### 启动步骤
+### 方式一：Docker（推荐，无需本地安装 Node.js）
 
 ```bash
-# 1. 安装后端依赖
-cd backend && npm install
+# 构建并启动
+docker-compose up --build
 
-# 2. 启动后端
-node --experimental-sqlite src/server.js
-
-# 3. 安装前端依赖（另开终端）
-cd frontend && npm install
-
-# 4. 开发模式（自动代理 /api 到 localhost:3001）
-npm run dev
-# 访问 http://localhost:3000
+# 浏览器访问：http://localhost:3001
 ```
+
+> 数据持久化存储在 Docker volume `edc-data` 中，停止容器后数据不会丢失。
+
+---
+
+### 方式二：一键脚本（本地 Node.js）
+
+**环境要求：** Node.js ≥ 22.5，npm ≥ 9
+
+```bash
+# 在项目根目录执行
+bash start.sh
+
+# 浏览器访问：http://localhost:3001
+```
+
+---
+
+### 方式三：手动分步启动（开发调试）
+
+```bash
+# 终端 1 – 启动后端（端口 3001）
+cd backend && npm install
+node src/server.js
+
+# 终端 2 – 启动前端开发服务器（端口 3000，含热重载）
+cd frontend && npm install
+npm run dev
+# 浏览器访问：http://localhost:3000
+```
+
+---
 
 ### 默认预置用户
 
