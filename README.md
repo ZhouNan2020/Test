@@ -4,6 +4,18 @@
 
 ---
 
+## 📸 界面预览
+
+| 研究项目列表 | 表单设计器 |
+|:-----------:|:---------:|
+| ![项目列表](docs/screenshots/01-project-list.png) | ![表单设计器](docs/screenshots/03-form-builder.png) |
+
+| 数据录入 | 数据记录列表 |
+|:-------:|:----------:|
+| ![数据录入](docs/screenshots/04-data-entry-filled.png) | ![记录列表](docs/screenshots/06-entry-list.png) |
+
+---
+
 ## 🚀 快速上手：如何打开用户界面
 
 **方式一：Docker（推荐，无需安装 Node.js）**
